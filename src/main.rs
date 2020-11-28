@@ -74,4 +74,35 @@ fn main() {
         println!("You haven't provided any reviewer.");
         exit(1);
     }
+
+    let mut reviewer = r;
+    if r.is_empty() {
+        reviewer = &dr;
+    }
+
+    let template = format!(
+        "
+**PR**
+`feature/{}`
+
+**LINKS**
+{}
+- (repo name 1)[]
+- (repo name 2)[]
+
+**REVIEW**
+{}
+- @person_nickname_1
+- @person_nickname_2
+
+**CHANGES**
+_TODO:_ what you've changed
+
+**TESTING**
+_TODO:_ how to test changes you've made
+",
+        id, l, reviewer,
+    );
+
+    println!("{}", template);
 }
