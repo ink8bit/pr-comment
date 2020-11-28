@@ -11,8 +11,6 @@ const CONFIG_FILE: &str = ".commentrc";
 struct Config {
     #[serde(rename(deserialize = "defaultReviewer"))]
     default_reviewer: String,
-    #[serde(rename(deserialize = "templatePath"))]
-    template_path: String,
     links: HashMap<String, LinkInfo>,
 }
 #[derive(Deserialize, Debug)]
