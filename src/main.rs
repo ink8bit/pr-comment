@@ -3,8 +3,9 @@ use dirs;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::fs;
+use std::process::exit;
 
-const CONFIG_FILE: &str = ".commentrc.json";
+const CONFIG_FILE: &str = ".commentrc";
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -53,17 +54,24 @@ fn main() {
                 .takes_value(true),
         );
 
-    let matches = app.get_matches();
-    println!("{:?}", matches);
-
     let home_path = dirs::home_dir().expect("can't get $HOME dir path");
     let home_str_path = home_path.to_str().unwrap();
     let config_path = format!("{}/{}", home_str_path, CONFIG_FILE);
-    println!("{:?}", config_path);
-
     let config_data = fs::read_to_string(config_path).expect("Unable to read config file");
-    println!("{}", config_data);
+    let config: Config = serde_json::from_str(&config_data).unwrap();
+    println!("deserialized = {:?}", config);
 
-    let deserialized: Config = serde_json::from_str(&config_data).unwrap();
-    println!("deserialized = {:?}", deserialized);
+    let dr = config.default_reviewer;
+
+    let matches = app.get_matches();
+
+    let id = matches.value_of("id").unwrap();
+    let l = matches.value_of("link").unwrap();
+    let r = matches.value_of("reviewer").unwrap_or("");
+    println!("id: {} links:{} r:{}", id, l, r);
+
+    if r.is_empty() && dr.is_empty() {
+        println!("You haven't provided any reviewer.");
+        exit(1);
+    }
 }
