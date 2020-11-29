@@ -3,7 +3,6 @@ use dirs;
 use serde::Deserialize;
 use std::error::Error;
 use std::fs;
-use std::process::exit;
 use std::{collections::HashMap, path::PathBuf};
 
 const CONFIG_FILE: &str = ".commentrc";
@@ -18,6 +17,12 @@ struct Config {
 struct LinkInfo {
     description: String,
     url: String,
+}
+
+struct Comment {
+    id: u16,
+    reviewers: String,
+    links: String,
 }
 
 fn main() {
@@ -55,34 +60,13 @@ fn main() {
     let home_path = dirs::home_dir().expect("can't get $HOME dir path");
     let config_file = config_path(home_path, CONFIG_FILE);
     let config = parse_config(config_file).expect("can't parse config file");
-    println!("deserialized = {:?}", config);
-
-    let dr = config.default_reviewer;
 
     let matches = app.get_matches();
-
     let id = matches.value_of("id").unwrap();
     let l = matches.value_of("link").unwrap();
     let r = matches.value_of("reviewer").unwrap_or("");
-    println!("id: {} links:{} r:{}", id, l, r);
-
-    if r.is_empty() && dr.is_empty() {
-        println!("You haven't provided any reviewer.");
-        exit(1);
-    }
-
-    let mut rs = String::new();
-    if r.is_empty() {
-        rs.push_str(&format!("@{}\n", dr));
-    }
-
-    let revs: Vec<&str> = r.split(",").collect();
-    if revs.len() > 0 && !revs[0].is_empty() {
-        dbg!(1);
-        for rev in revs {
-            rs.push_str(&format!("@{}\n", rev));
-        }
-    }
+    let dr = config.default_reviewer;
+    let rs = reviewers(r, dr).expect("can't get a list of reviewers.");
 
     let links: Vec<&str> = l.split(",").collect();
     let mut s = String::new();
@@ -131,8 +115,24 @@ fn parse_config(config_file: String) -> Result<Config, Box<dyn Error>> {
     Ok(config)
 }
 
-fn reviewer() {
-    todo!()
+fn reviewers(r_flag_value: &str, default_reviewer: String) -> Result<String, Box<dyn Error>> {
+    if r_flag_value.is_empty() && default_reviewer.is_empty() {
+        panic!("you haven't provided any reviewer.");
+    }
+
+    let mut rs = String::new();
+    if r_flag_value.is_empty() {
+        rs.push_str(&format!("@{}\n", default_reviewer));
+    }
+
+    let revs: Vec<&str> = r_flag_value.split(",").collect();
+    if revs.len() > 0 && !revs[0].is_empty() {
+        for rev in revs {
+            rs.push_str(&format!("@{}\n", rev));
+        }
+    }
+
+    Ok(rs)
 }
 
 fn links() {
