@@ -4,6 +4,10 @@ use clap::{App, Arg};
 use dirs;
 use serde::Deserialize;
 
+mod comment;
+
+use comment::{create, Comment};
+
 const CONFIG_FILE: &str = ".commentrc";
 
 #[derive(Deserialize, Debug)]
@@ -16,12 +20,6 @@ struct Config {
 struct LinkInfo {
     description: String,
     url: String,
-}
-
-struct Comment {
-    id: String,
-    reviewers: String,
-    links: String,
 }
 
 fn main() {
@@ -68,7 +66,7 @@ fn main() {
     let rs = reviewers(r, dr).expect("can't create a list of reviewers.");
     let ls = links(l, config.links);
 
-    let c = create_comment(Comment {
+    let c = create(Comment {
         id: id.to_string(),
         links: ls,
         reviewers: rs,
@@ -126,26 +124,4 @@ fn links(l_flag_value: &str, config_links: HashMap<String, LinkInfo>) -> String 
     }
 
     s
-}
-
-fn create_comment(c: Comment) -> String {
-    format!(
-        "
-**PR**
-`feature/{}`
-
-**LINKS**
-{}
-
-**REVIEW**
-{}
-
-**CHANGES**
-_TODO:_ what you've changed
-
-**TESTING**
-_TODO:_ how to test changes you've made
-",
-        c.id, c.links, c.reviewers,
-    )
 }
