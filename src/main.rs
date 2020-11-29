@@ -80,12 +80,14 @@ fn main() {
 fn config_path(home_path: PathBuf, config_file: &str) -> String {
     let home_str_path = home_path.to_str().unwrap();
     let config_path = format!("{}/{}", home_str_path, config_file);
+
     config_path
 }
 
 fn parse_config(config_file: String) -> Result<Config, Box<dyn Error>> {
     let config_data = fs::read_to_string(config_file)?;
     let config: Config = serde_json::from_str(&config_data)?;
+
     Ok(config)
 }
 
