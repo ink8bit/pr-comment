@@ -73,9 +73,17 @@ fn main() {
         exit(1);
     }
 
-    let mut reviewer = r;
+    let mut rs = String::new();
     if r.is_empty() {
-        reviewer = &dr;
+        rs.push_str(&format!("@{}\n", dr));
+    }
+
+    let revs: Vec<&str> = r.split(",").collect();
+    if revs.len() > 0 && !revs[0].is_empty() {
+        dbg!(1);
+        for rev in revs {
+            rs.push_str(&format!("@{}\n", rev));
+        }
     }
 
     let links: Vec<&str> = l.split(",").collect();
@@ -85,7 +93,6 @@ fn main() {
         for link in links {
             if config.links.contains_key(link) {
                 let val = config.links.get(link).unwrap();
-                println!("{:?}", val);
                 s.push_str(&format!("- [{}]({})\n", val.description, val.url));
             }
         }
@@ -101,8 +108,6 @@ fn main() {
 
 **REVIEW**
 {}
-- @person_nickname_1
-- @person_nickname_2
 
 **CHANGES**
 _TODO:_ what you've changed
@@ -110,7 +115,7 @@ _TODO:_ what you've changed
 **TESTING**
 _TODO:_ how to test changes you've made
 ",
-        id, s, reviewer,
+        id, s, rs,
     );
 
     println!("{}", template);
