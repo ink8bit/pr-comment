@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::fs;
 use std::process::exit;
 
-const CONFIG_FILE: &str = ".commentrc";
+const CONFIG_FILE: &str = ".commentrc1";
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -103,4 +103,24 @@ _TODO:_ how to test changes you've made
     );
 
     println!("{}", template);
+}
+
+fn config_path() {
+    todo!()
+}
+
+fn parse_config() {
+    todo!()
+}
+
+fn reviewer() {
+    todo!()
+}
+
+fn links() {
+    todo!()
+}
+
+fn create_comment() {
+    todo!()
 }
