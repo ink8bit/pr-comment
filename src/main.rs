@@ -1,26 +1,13 @@
-use std::{collections::HashMap, error::Error, fs, path::PathBuf};
+use std::{collections::HashMap, error::Error};
 
 use clap::{App, Arg};
 use dirs;
-use serde::Deserialize;
 
 mod comment;
+mod config;
 
-use comment::{create, Comment};
-
-const CONFIG_FILE: &str = ".commentrc";
-
-#[derive(Deserialize, Debug)]
-struct Config {
-    #[serde(rename(deserialize = "defaultReviewer"))]
-    default_reviewer: String,
-    links: HashMap<String, LinkInfo>,
-}
-#[derive(Deserialize, Debug)]
-struct LinkInfo {
-    description: String,
-    url: String,
-}
+use comment::Comment;
+use config::{LinkInfo, CONFIG_FILE};
 
 fn main() {
     let app = App::new("comment")
@@ -55,8 +42,8 @@ fn main() {
         );
 
     let home_path = dirs::home_dir().expect("can't get $HOME dir path");
-    let config_file = config_path(home_path, CONFIG_FILE);
-    let config = parse_config(config_file).expect("can't parse config file");
+    let config_file = config::path(home_path, CONFIG_FILE);
+    let config = config::parse(config_file).expect("can't parse config file");
 
     let matches = app.get_matches();
     let id = matches.value_of("id").unwrap();
@@ -66,27 +53,13 @@ fn main() {
     let rs = reviewers(r, dr).expect("can't create a list of reviewers.");
     let ls = links(l, config.links);
 
-    let c = create(Comment {
+    let c = comment::create(Comment {
         id: id.to_string(),
         links: ls,
         reviewers: rs,
     });
 
     println!("{}", c);
-}
-
-fn config_path(home_path: PathBuf, config_file: &str) -> String {
-    let home_str_path = home_path.to_str().unwrap();
-    let config_path = format!("{}/{}", home_str_path, config_file);
-
-    config_path
-}
-
-fn parse_config(config_file: String) -> Result<Config, Box<dyn Error>> {
-    let config_data = fs::read_to_string(config_file)?;
-    let config: Config = serde_json::from_str(&config_data)?;
-
-    Ok(config)
 }
 
 fn reviewers(r_flag_value: &str, default_reviewer: String) -> Result<String, Box<dyn Error>> {
