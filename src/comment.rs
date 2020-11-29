@@ -65,3 +65,18 @@ pub fn links(l_flag_value: &str, config_links: HashMap<String, config::LinkInfo>
 
     s
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    #[should_panic]
+    fn panic_when_no_reviewers() {
+        reviewers("", String::from("")).unwrap();
+    }
+
+    #[test]
+    fn use_default_reviewer_when_no_one_provided() {
+        assert_eq!(reviewers("", String::from("batman")).unwrap(), "@batman\n");
+    }
+}
