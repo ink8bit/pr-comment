@@ -1,18 +1,17 @@
 # PR comment
 
-A CLI app to compose a PR comment.
-
-It creates comment with the following structure:
+**comment** is a CLI app to create a *pull request* comment with the following structure:
 
 ```md
 **PR**
+`feature/id`
 
-[Repository name](repo link)
-**Branch:** `feature/id` or **Branch:** `hotfix/id`
+**LINKS**
+- [repo_name_1](pull_request_url_1)
+- [repo_name_2](pull_request_url_2)
 
 **REVIEW**
-@Shazam
-@Mario
+@mario
 
 **CHANGES**
 _TODO:_ what you've changed
@@ -23,18 +22,26 @@ _TODO:_ how to test changes you've made
 
 ## How to install
 
-via Makefile
+- via Makefile
+- via binary
 
 ## Development
 
-cargo run
-
 ### Run with params
 
-cargo run -- --id 100 --assignee Mario --repo awesome
+```sh
+cargo run -- --id 100 --link a --reviewer mario
+
+# short options names
+cargo run -- -i 100 -l a -r mario
+```
 
 ## Build release version
 
+```
 cargo build --release
+```
 
 ## Contributing
+
+*TODO*
