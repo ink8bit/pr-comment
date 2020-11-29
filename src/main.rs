@@ -66,19 +66,8 @@ fn main() {
     let l = matches.value_of("link").unwrap();
     let r = matches.value_of("reviewer").unwrap_or("");
     let dr = config.default_reviewer;
-    let rs = reviewers(r, dr).expect("can't get a list of reviewers.");
-
-    let links: Vec<&str> = l.split(",").collect();
-    let mut s = String::new();
-
-    if links.len() > 0 {
-        for link in links {
-            if config.links.contains_key(link) {
-                let val = config.links.get(link).unwrap();
-                s.push_str(&format!("- [{}]({})\n", val.description, val.url));
-            }
-        }
-    }
+    let rs = reviewers(r, dr).expect("can't create a list of reviewers.");
+    let ls = links(l, config.links).expect("can't create a list of PR links.");
 
     let template = format!(
         "
@@ -97,7 +86,7 @@ _TODO:_ what you've changed
 **TESTING**
 _TODO:_ how to test changes you've made
 ",
-        id, s, rs,
+        id, ls, rs,
     );
 
     println!("{}", template);
@@ -135,8 +124,25 @@ fn reviewers(r_flag_value: &str, default_reviewer: String) -> Result<String, Box
     Ok(rs)
 }
 
-fn links() {
-    todo!()
+fn links(
+    l_flag_value: &str,
+    config_links: HashMap<String, LinkInfo>,
+) -> Result<String, Box<dyn Error>> {
+    let links: Vec<&str> = l_flag_value.split(",").collect();
+    let mut s = String::new();
+
+    if links.len() < 1 {
+        panic!("you haven't provided any PR links.");
+    }
+
+    for link in links {
+        if config_links.contains_key(link) {
+            let val = config_links.get(link).unwrap();
+            s.push_str(&format!("- [{}]({})\n", val.description, val.url));
+        }
+    }
+
+    Ok(s)
 }
 
 fn create_comment() {
