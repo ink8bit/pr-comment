@@ -1,9 +1,10 @@
 use clap::{App, Arg};
 use dirs;
 use serde::Deserialize;
-use std::collections::HashMap;
+use std::error::Error;
 use std::fs;
 use std::process::exit;
+use std::{collections::HashMap, path::PathBuf};
 
 const CONFIG_FILE: &str = ".commentrc";
 
@@ -52,10 +53,8 @@ fn main() {
         );
 
     let home_path = dirs::home_dir().expect("can't get $HOME dir path");
-    let home_str_path = home_path.to_str().unwrap();
-    let config_path = format!("{}/{}", home_str_path, CONFIG_FILE);
-    let config_data = fs::read_to_string(config_path).expect("Unable to read config file");
-    let config: Config = serde_json::from_str(&config_data).unwrap();
+    let config_file = config_path(home_path, CONFIG_FILE);
+    let config = parse_config(config_file).expect("can't parse config file");
     println!("deserialized = {:?}", config);
 
     let dr = config.default_reviewer;
@@ -120,12 +119,16 @@ _TODO:_ how to test changes you've made
     println!("{}", template);
 }
 
-fn config_path() {
-    todo!()
+fn config_path(home_path: PathBuf, config_file: &str) -> String {
+    let home_str_path = home_path.to_str().unwrap();
+    let config_path = format!("{}/{}", home_str_path, config_file);
+    config_path
 }
 
-fn parse_config() {
-    todo!()
+fn parse_config(config_file: String) -> Result<Config, Box<dyn Error>> {
+    let config_data = fs::read_to_string(config_file)?;
+    let config: Config = serde_json::from_str(&config_data)?;
+    Ok(config)
 }
 
 fn reviewer() {
