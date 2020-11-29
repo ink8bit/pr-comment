@@ -28,7 +28,7 @@ struct Comment {
 fn main() {
     let app = App::new("comment")
         .version("0.0.1")
-        .about("Creates PR comment")
+        .about("comment is a CLI app which creates a formatted comment for your pull requests.")
         .author("ink8bit")
         .arg(
             Arg::new("id")
@@ -67,7 +67,7 @@ fn main() {
     let r = matches.value_of("reviewer").unwrap_or("");
     let dr = config.default_reviewer;
     let rs = reviewers(r, dr).expect("can't create a list of reviewers.");
-    let ls = links(l, config.links).expect("can't create a list of PR links.");
+    let ls = links(l, config.links);
 
     let c = create_comment(Comment {
         id: id.to_string(),
@@ -110,16 +110,9 @@ fn reviewers(r_flag_value: &str, default_reviewer: String) -> Result<String, Box
     Ok(rs)
 }
 
-fn links(
-    l_flag_value: &str,
-    config_links: HashMap<String, LinkInfo>,
-) -> Result<String, Box<dyn Error>> {
+fn links(l_flag_value: &str, config_links: HashMap<String, LinkInfo>) -> String {
     let links: Vec<&str> = l_flag_value.split(",").collect();
     let mut s = String::new();
-
-    if links.len() < 1 {
-        panic!("you haven't provided any PR links.");
-    }
 
     for link in links {
         if config_links.contains_key(link) {
@@ -128,7 +121,7 @@ fn links(
         }
     }
 
-    Ok(s)
+    s
 }
 
 fn create_comment(c: Comment) -> String {
