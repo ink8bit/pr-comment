@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use std::{collections::HashMap, error::Error, fs, path::PathBuf};
 
-pub const CONFIG_FILE: &str = ".commentrc";
+pub const FILE: &str = ".commentrc";
 
 #[derive(Deserialize, Debug)]
 pub struct Config {
