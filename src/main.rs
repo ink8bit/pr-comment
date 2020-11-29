@@ -15,7 +15,6 @@ struct Config {
 }
 #[derive(Deserialize, Debug)]
 struct LinkInfo {
-    abbreviation: String,
     description: String,
     url: String,
 }
