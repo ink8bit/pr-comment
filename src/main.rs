@@ -1,9 +1,8 @@
+use std::{collections::HashMap, error::Error, fs, path::PathBuf};
+
 use clap::{App, Arg};
 use dirs;
 use serde::Deserialize;
-use std::error::Error;
-use std::fs;
-use std::{collections::HashMap, path::PathBuf};
 
 const CONFIG_FILE: &str = ".commentrc";
 
