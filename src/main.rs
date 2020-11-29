@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::fs;
 use std::process::exit;
 
-const CONFIG_FILE: &str = ".commentrc1";
+const CONFIG_FILE: &str = ".commentrc";
 
 #[derive(Deserialize, Debug)]
 struct Config {
@@ -78,6 +78,19 @@ fn main() {
         reviewer = &dr;
     }
 
+    let links: Vec<&str> = l.split(",").collect();
+    let mut s = String::new();
+
+    if links.len() > 0 {
+        for link in links {
+            if config.links.contains_key(link) {
+                let val = config.links.get(link).unwrap();
+                println!("{:?}", val);
+                s.push_str(&format!("- [{}]({})\n", val.description, val.url));
+            }
+        }
+    }
+
     let template = format!(
         "
 **PR**
@@ -85,8 +98,6 @@ fn main() {
 
 **LINKS**
 {}
-- (repo name 1)[]
-- (repo name 2)[]
 
 **REVIEW**
 {}
@@ -99,7 +110,7 @@ _TODO:_ what you've changed
 **TESTING**
 _TODO:_ how to test changes you've made
 ",
-        id, l, reviewer,
+        id, s, reviewer,
     );
 
     println!("{}", template);
