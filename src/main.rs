@@ -20,7 +20,7 @@ struct LinkInfo {
 }
 
 struct Comment {
-    id: u16,
+    id: String,
     reviewers: String,
     links: String,
 }
@@ -69,27 +69,13 @@ fn main() {
     let rs = reviewers(r, dr).expect("can't create a list of reviewers.");
     let ls = links(l, config.links).expect("can't create a list of PR links.");
 
-    let template = format!(
-        "
-**PR**
-`feature/{}`
+    let c = create_comment(Comment {
+        id: id.to_string(),
+        links: ls,
+        reviewers: rs,
+    });
 
-**LINKS**
-{}
-
-**REVIEW**
-{}
-
-**CHANGES**
-_TODO:_ what you've changed
-
-**TESTING**
-_TODO:_ how to test changes you've made
-",
-        id, ls, rs,
-    );
-
-    println!("{}", template);
+    println!("{}", c);
 }
 
 fn config_path(home_path: PathBuf, config_file: &str) -> String {
@@ -145,6 +131,24 @@ fn links(
     Ok(s)
 }
 
-fn create_comment() {
-    todo!()
+fn create_comment(c: Comment) -> String {
+    format!(
+        "
+**PR**
+`feature/{}`
+
+**LINKS**
+{}
+
+**REVIEW**
+{}
+
+**CHANGES**
+_TODO:_ what you've changed
+
+**TESTING**
+_TODO:_ how to test changes you've made
+",
+        c.id, c.links, c.reviewers,
+    )
 }
