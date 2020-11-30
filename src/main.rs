@@ -19,7 +19,7 @@ fn main() {
     let is_bug = args.is_present("bug");
     let dr = config.default_reviewer;
 
-    let branch_name = comment::id(id, is_bug);
+    let branch_name = comment::branch(id, is_bug);
     let rs = comment::reviewers(r, dr).expect("can't create a list of reviewers.");
     let ls = comment::links(l, config.links);
 
