@@ -35,3 +35,16 @@ pub fn parse(config_file: String) -> Result<Config, Box<dyn Error>> {
 
     Ok(config)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn get_path() {
+        assert_eq!(
+            path(FILE),
+            format!("{}/{}", dirs::home_dir().unwrap().to_str().unwrap(), FILE)
+        );
+    }
+}
