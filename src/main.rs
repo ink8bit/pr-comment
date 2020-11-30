@@ -1,5 +1,3 @@
-use dirs;
-
 mod cli;
 mod comment;
 mod config;
@@ -9,8 +7,7 @@ use comment::Comment;
 fn main() {
     let args = cli::args();
 
-    let home_path = dirs::home_dir().expect("can't get $HOME dir path");
-    let config_file = config::path(home_path, config::FILE);
+    let config_file = config::path(config::FILE);
     let config = config::parse(config_file).expect("can't parse config file");
 
     let id = args.value_of("id").unwrap();

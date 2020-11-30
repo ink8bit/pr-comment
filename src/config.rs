@@ -1,5 +1,7 @@
+use dirs;
 use serde::Deserialize;
-use std::{collections::HashMap, error::Error, fs, path::PathBuf};
+
+use std::{collections::HashMap, error::Error, fs};
 
 pub const FILE: &str = ".commentrc";
 
@@ -15,11 +17,16 @@ pub struct LinkInfo {
     pub url: String,
 }
 
-pub fn path(home_path: PathBuf, config_file: &str) -> String {
-    let home_str_path = home_path.to_str().unwrap();
-    let config_path = format!("{}/{}", home_str_path, config_file);
-
-    config_path
+pub fn path(config_file: &str) -> String {
+    let home_path = dirs::home_dir();
+    match home_path {
+        Some(p) => {
+            let home_str_path = p.to_str().unwrap();
+            let config_path = format!("{}/{}", home_str_path, config_file);
+            config_path
+        }
+        None => panic!("can't get $HOME dir path"),
+    }
 }
 
 pub fn parse(config_file: String) -> Result<Config, Box<dyn Error>> {
