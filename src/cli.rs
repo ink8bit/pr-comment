@@ -31,5 +31,11 @@ pub fn args() -> ArgMatches {
                 .about("Sets a reviewer or reviewers, use comma for multiple values")
                 .takes_value(true),
         )
+        .arg(
+            Arg::new("bug")
+                .short('b')
+                .long("bug")
+                .about("Sets a bug value to true"),
+        )
         .get_matches()
 }

@@ -16,12 +16,15 @@ fn main() {
     let id = args.value_of("id").unwrap();
     let l = args.value_of("link").unwrap();
     let r = args.value_of("reviewer").unwrap_or("");
+    let is_bug = args.is_present("bug");
     let dr = config.default_reviewer;
+
+    let branch_name = comment::id(id, is_bug);
     let rs = comment::reviewers(r, dr).expect("can't create a list of reviewers.");
     let ls = comment::links(l, config.links);
 
     let c = comment::create(Comment {
-        id: id.to_string(),
+        branch_name,
         links: ls,
         reviewers: rs,
     });

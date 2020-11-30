@@ -2,7 +2,7 @@ use std::{collections::HashMap, error::Error};
 
 use super::config;
 pub struct Comment {
-    pub id: String,
+    pub branch_name: String,
     pub reviewers: String,
     pub links: String,
 }
@@ -11,7 +11,7 @@ pub fn create(c: Comment) -> String {
     format!(
         "
 **PR**
-`feature/{}`
+{}
 
 **LINKS**
 {}
@@ -25,8 +25,15 @@ _TODO:_ what you've changed
 **TESTING**
 _TODO:_ how to test changes you've made
 ",
-        c.id, c.links, c.reviewers,
+        c.branch_name, c.links, c.reviewers,
     )
+}
+
+pub fn id(i_flag: &str, bug_flag: bool) -> String {
+    if bug_flag {
+        return format!("hotfix/{}", i_flag);
+    }
+    format!("feature/{}", i_flag)
 }
 
 pub fn reviewers(r_flag_value: &str, default_reviewer: String) -> Result<String, Box<dyn Error>> {
