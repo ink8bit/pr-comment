@@ -29,7 +29,7 @@ _TODO:_ how to test changes you've made
     )
 }
 
-pub fn id(i_flag: &str, bug_flag: bool) -> String {
+pub fn branch(i_flag: &str, bug_flag: bool) -> String {
     if bug_flag {
         return format!("hotfix/{}", i_flag);
     }
@@ -76,6 +76,7 @@ pub fn links(l_flag_value: &str, config_links: HashMap<String, config::LinkInfo>
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
     #[should_panic]
     fn panic_when_no_reviewers() {
@@ -85,5 +86,15 @@ mod tests {
     #[test]
     fn use_default_reviewer_when_no_one_provided() {
         assert_eq!(reviewers("", String::from("batman")).unwrap(), "@batman\n");
+    }
+
+    #[test]
+    fn feature_branch_if_bug_flag_is_true() {
+        assert_eq!(branch("123", false), "feature/123");
+    }
+
+    #[test]
+    fn hotfix_branch_if_bug_flag_is_true() {
+        assert_eq!(branch("123", true), "hotfix/123");
     }
 }
