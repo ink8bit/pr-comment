@@ -3,12 +3,12 @@
 **comment** is a CLI app to create a *pull request* comment with the following structure:
 
 ```md
-**PR**
-`feature/id`
+**PULL REQUEST**
+feature/id
 
 **LINKS**
-- [repo_name_1](pull_request_url_1)
-- [repo_name_2](pull_request_url_2)
+- repo_name_1 pull_request_url_1
+- repo_name_2 pull_request_url_2
 
 **REVIEW**
 @mario
