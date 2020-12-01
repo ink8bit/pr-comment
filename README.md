@@ -67,27 +67,91 @@ _TODO:_ how to test changes you've made
 
 ## Commands
 
-*TODO*
+### Help
+
+```sh
+comment -h
+```
+
+### Version
+
+```sh
+comment -V
+```
+
+### Create a comment to your pull request:
+
+For example,
+- you have a task ID `150` in your task tracker
+- you created pull request with ID `35`
+- your reviewer has a nickname `@happy`
+- and you have the following config:
+
+```json
+{
+  "defaultReviewer": "mario",
+  "links": {
+    "p": {
+      "repoName": "pr-comment",
+      "url": "https://github.com/ink8bit/pr-comment/pull"
+    }
+  }
+}
+```
+
+```sh
+comment -i 150 -l p/35 -r happy
+```
+
+Then you will get in your terminal:
+
+```
+**PULL REQUEST**
+feature/150
+
+**LINKS**
+- pr-comment https://github.com/ink8bit/pr-comment/pull/35
+
+**REVIEW**
+@happy
+
+
+**CHANGES**
+_TODO:_ what you've changed
+
+**TESTING**
+_TODO:_ how to test changes you've made
+```
 
 ## How to install
 
-- via Makefile
-- via binary
+1. Go to [releases page](https://github.com/ink8bit/pr-comment/releases)
+2. Grab the latest binary
+3. Put binary into `/usr/local/bin/`
+4. Type `comment -h` in Terminal and you should see a help message
 
 ## Development
 
 ### Run with params
 
 ```sh
-cargo run -- --id 100 --link a --reviewer mario
+cargo run -- --id 100 --link p/1 --reviewer mario
 
 # short options names
-cargo run -- -i 100 -l a -r mario
+cargo run -- -i 100 -l p/1 -r mario
 ```
 
-## Build release version
+## Build
 
+### Debug version
+
+```sh
+cargo build
 ```
+
+### Release version
+
+```sh
 cargo build --release
 ```
 
