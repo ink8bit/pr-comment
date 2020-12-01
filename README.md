@@ -157,4 +157,4 @@ cargo build --release
 
 ## Contributing
 
-*TODO*
+Please refer to [CONTRIBUTING.md](/.github/CONTRIBUTING.md).
