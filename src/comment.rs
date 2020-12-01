@@ -63,7 +63,7 @@ pub fn links(l_flag_value: &str, config_links: HashMap<String, config::LinkInfo>
     for link in links {
         let link_parts: Vec<&str> = link.split("/").collect();
         let repo_abbrev = link_parts[0];
-        let pr_id = link_parts[1];
+        let pr_id = link_parts.get(1).unwrap_or(&"");
         if config_links.contains_key(repo_abbrev) {
             let val = config_links.get(repo_abbrev).unwrap();
             s.push_str(&format!("- {} {}/{}\n", val.description, val.url, pr_id));
