@@ -10,7 +10,7 @@ pub struct Comment {
 pub fn create(c: Comment) -> String {
     format!(
         "
-**PR**
+**PULL REQUEST**
 {}
 
 **LINKS**
