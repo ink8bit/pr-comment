@@ -12,7 +12,7 @@ If you're opening an issue please use default templates. It helps to keep a cons
 
 ## Setup
 
-Please refer to [Getting started](/README.md) section in [README](/README.md) after creating a fork of this repo.
+Please refer to **Development** section in [README](/README.md) after creating a fork of this repo.
 
 ## Submitting Changes
 
