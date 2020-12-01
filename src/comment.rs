@@ -66,7 +66,7 @@ pub fn links(l_flag_value: &str, config_links: HashMap<String, config::LinkInfo>
         let pr_id = link_parts[1];
         if config_links.contains_key(repo_abbrev) {
             let val = config_links.get(repo_abbrev).unwrap();
-            s.push_str(&format!("- [{}]({}/{})\n", val.description, val.url, pr_id));
+            s.push_str(&format!("- {} {}/{}\n", val.description, val.url, pr_id));
         }
     }
 
