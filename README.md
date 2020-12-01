@@ -31,7 +31,7 @@ This file should be JSON with the following structure:
   "defaultReviewer": "mario",
   "links": {
     "p": {
-      "description": "pr-comment",
+      "repoName": "pr-comment",
       "url": "https://github.com/ink8bit/pr-comment/pull"
     }
   }
