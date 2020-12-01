@@ -13,7 +13,8 @@ pub struct Config {
 }
 #[derive(Deserialize, Debug)]
 pub struct LinkInfo {
-    pub description: String,
+    #[serde(rename(deserialize = "repoName"))]
+    pub repo_name: String,
     pub url: String,
 }
 
