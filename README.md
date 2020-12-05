@@ -1,5 +1,7 @@
 # PR comment
 
+![Rust](https://github.com/ink8bit/pr-comment/workflows/Rust/badge.svg)
+
 **comment** is a CLI app to create a *pull request* comment with the following structure:
 
 ```md
@@ -143,13 +145,13 @@ cargo run -- -i 100 -l p/1 -r mario
 
 ## Build
 
-### Debug version
+### Build debug version
 
 ```sh
 cargo build
 ```
 
-### Release version
+### Build release version
 
 ```sh
 cargo build --release
