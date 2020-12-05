@@ -1,4 +1,3 @@
-use dirs;
 use serde::Deserialize;
 
 use std::{collections::HashMap, error::Error, fs};
