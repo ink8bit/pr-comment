@@ -15,10 +15,8 @@ pub fn create(c: Comment) -> String {
 
 **LINKS**
 {links}
-
 **REVIEW**
 {review}
-
 **CHANGES**
 _TODO:_ what you've changed
 

@@ -13,7 +13,7 @@ feature/id
 - repo_name_2 pull_request_url_2
 
 **REVIEW**
-@mario
+@reviewer_nickname
 
 **CHANGES**
 _TODO:_ what you've changed
@@ -24,13 +24,13 @@ _TODO:_ how to test changes you've made
 
 ## How to use
 
-1. Create a config file `.commentrc` in your `$HOME` folder.
+1. Create JSON config file `.commentrc` in your `$HOME` folder.
 
-This file should be JSON with the following structure:
+This file should have the following structure:
 
 ```json
 {
-  "defaultReviewer": "mario",
+  "defaultReviewer": "reviewer_nickname_without_at_sign",
   "links": {
     "p": {
       "repoName": "pr-comment",
@@ -40,7 +40,26 @@ This file should be JSON with the following structure:
 }
 ```
 
-2. Run this command in your Terminal:
+`links` section can have as many keys as you wish. Two keys for example:
+
+```json
+{
+  "defaultReviewer": "reviewer_nickname_without_at_sign",
+  "links": {
+    "p": {
+      "repoName": "pr-comment",
+      "url": "https://github.com/ink8bit/pr-comment/pull"
+    },
+    "a": {
+      "repoName": "awesome-pr-comment",
+      "url": "https://github.com/ink8bit/awesome-pr-comment/pull"
+    }
+  }
+}
+```
+
+
+1. Run this command in your Terminal:
 
 ```sh
 comment -i 5 -l b/1
@@ -55,10 +74,8 @@ comment -i 5 -l b/1
 **LINKS**
 - [pr-comment](https://github.com/ink8bit/pr-comment/pull/1)
 
-
 **REVIEW**
-@mario
-
+@reviewer_nickname_without_at_sign
 
 **CHANGES**
 _TODO:_ what you've changed
@@ -86,12 +103,12 @@ comment -V
 For example,
 - you have a task ID `150` in your task tracker
 - you created pull request with ID `35`
-- your reviewer has a nickname `@happy`
+- your reviewer has a nickname `@awesome_reviewer`
 - and you have the following config:
 
 ```json
 {
-  "defaultReviewer": "mario",
+  "defaultReviewer": "reviewer_nickname_without_at_sign",
   "links": {
     "p": {
       "repoName": "pr-comment",
@@ -102,7 +119,7 @@ For example,
 ```
 
 ```sh
-comment -i 150 -l p/35 -r happy
+comment -i 150 -l p/35 -r awesome_reviewer
 ```
 
 Then you will get in your terminal:
@@ -115,7 +132,7 @@ feature/150
 - pr-comment https://github.com/ink8bit/pr-comment/pull/35
 
 **REVIEW**
-@happy
+@awesome_reviewer
 
 
 **CHANGES**
@@ -130,7 +147,7 @@ _TODO:_ how to test changes you've made
 If you want to copy your comment to clipboard add `-c` or `--copy` flag to your command:
 
 ```sh
-comment -i 150 -l p/35 -r happy -c
+comment -i 150 -l p/35 -c
 ```
 
 ## How to install
@@ -145,10 +162,10 @@ comment -i 150 -l p/35 -r happy -c
 ### Run with params
 
 ```sh
-cargo run -- --id 100 --link p/1 --reviewer mario
+cargo run -- --id 100 --link p/1 --reviewer reviewer_nickname
 
 # short options names
-cargo run -- -i 100 -l p/1 -r mario
+cargo run -- -i 100 -l p/1 -r reviewer_nickname
 ```
 
 ## Build
