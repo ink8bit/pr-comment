@@ -96,7 +96,7 @@ mod tests {
     }
 
     #[test]
-    fn hotfix_branch_if_bug_flag_is_true() {
+    fn bugfix_branch_if_bug_flag_is_true() {
         assert_eq!(branch("123", true), "bugfix/123");
     }
 }
