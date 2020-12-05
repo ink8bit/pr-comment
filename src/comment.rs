@@ -48,8 +48,8 @@ pub fn reviewers(reviewer: &str, default_reviewer: String) -> Result<String, Box
         rs.push_str(&format!("@{}\n", default_reviewer));
     }
 
-    let revs: Vec<&str> = reviewer.split(",").collect();
-    if revs.len() > 0 && !revs[0].is_empty() {
+    let revs: Vec<&str> = reviewer.split(',').collect();
+    if revs.is_empty() && !revs[0].is_empty() {
         for rev in revs {
             rs.push_str(&format!("@{}\n", rev));
         }
@@ -59,11 +59,11 @@ pub fn reviewers(reviewer: &str, default_reviewer: String) -> Result<String, Box
 }
 
 pub fn links(links: &str, config_links: HashMap<String, config::LinkInfo>) -> String {
-    let link_list: Vec<&str> = links.split(",").collect();
+    let link_list: Vec<&str> = links.split(',').collect();
     let mut s = String::new();
 
     for link in link_list {
-        let parts: Vec<&str> = link.split("/").collect();
+        let parts: Vec<&str> = link.split('/').collect();
         let repo_abbrev = parts[0];
         let pr_id = parts.get(1).unwrap_or(&"");
         if config_links.contains_key(repo_abbrev) {
