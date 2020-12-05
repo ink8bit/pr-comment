@@ -16,6 +16,7 @@ fn main() {
     let l = args.value_of("link").unwrap();
     let r = args.value_of("reviewer").unwrap_or("");
     let is_bug = args.is_present("bug");
+    let need_copy = args.is_present("copy");
     let dr = config.default_reviewer;
 
     let branch_name = comment::branch(id, is_bug);
@@ -30,6 +31,8 @@ fn main() {
 
     println!("{}", c);
 
-    let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
-    ctx.set_contents(c).unwrap();
+    if need_copy {
+        let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+        ctx.set_contents(c).unwrap();
+    }
 }

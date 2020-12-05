@@ -125,6 +125,14 @@ _TODO:_ what you've changed
 _TODO:_ how to test changes you've made
 ```
 
+### Copy to clipboard
+
+If you want to copy your comment to clipboard add `-c` or `--copy` flag to your command:
+
+```sh
+comment -i 150 -l p/35 -r happy -c
+```
+
 ## How to install
 
 1. Go to [releases page](https://github.com/ink8bit/pr-comment/releases)
