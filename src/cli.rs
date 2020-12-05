@@ -37,5 +37,11 @@ pub fn args() -> ArgMatches {
                 .long("bug")
                 .about("Sets a bug value to true"),
         )
+        .arg(
+            Arg::new("copy")
+                .short('c')
+                .long("copy")
+                .about("Copies comment to clipboard"),
+        )
         .get_matches()
 }
