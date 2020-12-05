@@ -1,3 +1,5 @@
+use clipboard::{ClipboardContext, ClipboardProvider};
+
 mod cli;
 mod comment;
 mod config;
@@ -27,4 +29,7 @@ fn main() {
     });
 
     println!("{}", c);
+
+    let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+    ctx.set_contents(c).unwrap();
 }
