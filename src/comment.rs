@@ -29,11 +29,11 @@ _TODO:_ how to test changes you've made
     )
 }
 
-pub fn branch(i_flag: &str, bug_flag: bool) -> String {
-    if bug_flag {
-        return format!("hotfix/{}", i_flag);
+pub fn branch(id: &str, is_bug: bool) -> String {
+    if is_bug {
+        return format!("bugfix/{}", id);
     }
-    format!("feature/{}", i_flag)
+    format!("feature/{}", id)
 }
 
 pub fn reviewers(r_flag_value: &str, default_reviewer: String) -> Result<String, Box<dyn Error>> {
@@ -95,6 +95,6 @@ mod tests {
 
     #[test]
     fn hotfix_branch_if_bug_flag_is_true() {
-        assert_eq!(branch("123", true), "hotfix/123");
+        assert_eq!(branch("123", true), "bugfix/123");
     }
 }
