@@ -8,7 +8,7 @@ fn main() {
     let args = cli::args();
 
     let config_file = config::path(config::FILE);
-    let config = config::parse(config_file).expect("can't parse config file");
+    let config = config::parse(config_file).expect("Can't parse config file.");
 
     let id = args.value_of("id").unwrap();
     let l = args.value_of("link").unwrap();
@@ -17,13 +17,13 @@ fn main() {
     let dr = config.default_reviewer;
 
     let branch_name = comment::branch(id, is_bug);
-    let rs = comment::reviewers(r, dr).expect("can't create a list of reviewers.");
+    let revs = comment::reviewers(r, dr).expect("Can't create a list of reviewers.");
     let ls = comment::links(l, config.links);
 
     let c = comment::create(Comment {
         branch_name,
         links: ls,
-        reviewers: rs,
+        reviewers: revs,
     });
 
     println!("{}", c);

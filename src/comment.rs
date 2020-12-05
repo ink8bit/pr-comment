@@ -11,13 +11,13 @@ pub fn create(c: Comment) -> String {
     format!(
         "
 **PULL REQUEST**
-{}
+{branch}
 
 **LINKS**
-{}
+{links}
 
 **REVIEW**
-{}
+{review}
 
 **CHANGES**
 _TODO:_ what you've changed
@@ -25,7 +25,9 @@ _TODO:_ what you've changed
 **TESTING**
 _TODO:_ how to test changes you've made
 ",
-        c.branch_name, c.links, c.reviewers,
+        branch = c.branch_name,
+        links = c.links,
+        review = c.reviewers,
     )
 }
 
@@ -36,17 +38,17 @@ pub fn branch(id: &str, is_bug: bool) -> String {
     format!("feature/{}", id)
 }
 
-pub fn reviewers(r_flag_value: &str, default_reviewer: String) -> Result<String, Box<dyn Error>> {
-    if r_flag_value.is_empty() && default_reviewer.is_empty() {
-        panic!("you haven't provided any reviewer.");
+pub fn reviewers(reviewer: &str, default_reviewer: String) -> Result<String, Box<dyn Error>> {
+    if reviewer.is_empty() && default_reviewer.is_empty() {
+        panic!("You haven't provided any reviewer.");
     }
 
     let mut rs = String::new();
-    if r_flag_value.is_empty() {
+    if reviewer.is_empty() {
         rs.push_str(&format!("@{}\n", default_reviewer));
     }
 
-    let revs: Vec<&str> = r_flag_value.split(",").collect();
+    let revs: Vec<&str> = reviewer.split(",").collect();
     if revs.len() > 0 && !revs[0].is_empty() {
         for rev in revs {
             rs.push_str(&format!("@{}\n", rev));
