@@ -110,7 +110,7 @@ OPTIONS:
 ```
 
 
-### Example
+## Example
 
 - you have a task ID `150` in your task tracker
 - you created pull request with ID `35`
@@ -150,6 +150,15 @@ _TODO:_ what you've changed
 
 **TESTING**
 _TODO:_ how to test changes you've made
+```
+
+## Development
+
+1. clone this repo
+2. run in your Terminal:
+
+```sh
+cargo build
 ```
 
 ## Contributing
