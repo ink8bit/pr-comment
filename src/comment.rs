@@ -1,15 +1,20 @@
-use std::{collections::HashMap, error::Error};
-
-use super::config;
+use super::config::Config;
 pub struct Comment {
-    pub branch_name: String,
+    pub id: String,
     pub reviewers: String,
     pub links: String,
+    pub is_bug: bool,
+    pub config: Config,
 }
 
-pub fn create(c: Comment) -> String {
-    format!(
-        "
+impl Comment {
+    pub fn new(self) -> Result<String, String> {
+        let branch_name = Comment::branch_name(&self);
+        let reviewers = Comment::reviewers(&self)?;
+        let links = Comment::links(&self);
+
+        let comment = format!(
+            "
 **PULL REQUEST**
 {branch}
 
@@ -22,79 +27,56 @@ _TODO:_ what you've changed
 
 **TESTING**
 _TODO:_ how to test changes you've made
-",
-        branch = c.branch_name,
-        links = c.links,
-        review = c.reviewers,
-    )
-}
+    ",
+            branch = branch_name,
+            links = links,
+            review = reviewers,
+        );
 
-pub fn branch(id: &str, is_bug: bool) -> String {
-    if is_bug {
-        return format!("bugfix/{}", id);
-    }
-    format!("feature/{}", id)
-}
-
-pub fn reviewers(reviewer: &str, default_reviewer: String) -> Result<String, Box<dyn Error>> {
-    if reviewer.is_empty() && default_reviewer.is_empty() {
-        panic!("You haven't provided any reviewer.");
+        Ok(comment)
     }
 
-    let mut rs = String::new();
-    if reviewer.is_empty() {
-        rs.push_str(&format!("@{}\n", default_reviewer));
-    }
-
-    let revs: Vec<&str> = reviewer.split(',').collect();
-    if !revs.is_empty() && !revs[0].is_empty() {
-        for rev in revs {
-            rs.push_str(&format!("@{}\n", rev));
+    fn branch_name(&self) -> String {
+        if self.is_bug {
+            return format!("bugfix/{}", self.id);
         }
+        format!("feature/{}", self.id)
     }
 
-    Ok(rs)
-}
-
-pub fn links(links: &str, config_links: HashMap<String, config::LinkInfo>) -> String {
-    let link_list: Vec<&str> = links.split(',').collect();
-    let mut s = String::new();
-
-    for link in link_list {
-        let parts: Vec<&str> = link.split('/').collect();
-        let repo_abbrev = parts[0];
-        let pr_id = parts.get(1).unwrap_or(&"");
-        if config_links.contains_key(repo_abbrev) {
-            let val = config_links.get(repo_abbrev).unwrap();
-            s.push_str(&format!("- {} {}/{}\n", val.repo_name, val.url, pr_id));
+    fn reviewers(&self) -> Result<String, String> {
+        if self.reviewers.is_empty() && self.config.default_reviewer.is_empty() {
+            return Err(String::from("You haven't provided any reviewer."));
         }
+
+        let mut rs = String::new();
+        if self.reviewers.is_empty() {
+            rs.push_str(&format!("@{}\n", self.config.default_reviewer));
+        }
+
+        let revs: Vec<&str> = self.reviewers.split(',').collect();
+        if !revs.is_empty() && !revs[0].is_empty() {
+            for rev in revs {
+                rs.push_str(&format!("@{}\n", rev));
+            }
+        }
+
+        Ok(rs)
     }
 
-    s
-}
+    fn links(&self) -> String {
+        let link_list: Vec<&str> = self.links.split(',').collect();
+        let mut s = String::new();
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+        for link in link_list {
+            let parts: Vec<&str> = link.split('/').collect();
+            let repo_abbrev = parts[0];
+            let pr_id = parts.get(1).unwrap_or(&"");
+            if self.config.links.contains_key(repo_abbrev) {
+                let val = self.config.links.get(repo_abbrev).unwrap();
+                s.push_str(&format!("- {} {}/{}\n", val.repo_name, val.url, pr_id));
+            }
+        }
 
-    #[test]
-    #[should_panic]
-    fn panic_when_no_reviewers() {
-        reviewers("", String::from("")).unwrap();
-    }
-
-    #[test]
-    fn use_default_reviewer_when_no_one_provided() {
-        assert_eq!(reviewers("", String::from("batman")).unwrap(), "@batman\n");
-    }
-
-    #[test]
-    fn feature_branch_if_bug_flag_is_true() {
-        assert_eq!(branch("123", false), "feature/123");
-    }
-
-    #[test]
-    fn bugfix_branch_if_bug_flag_is_true() {
-        assert_eq!(branch("123", true), "bugfix/123");
+        s
     }
 }

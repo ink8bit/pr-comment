@@ -9,30 +9,27 @@ use config::Config;
 
 fn main() {
     let args = cli::args();
-
     let config = Config::new().expect("Couldn't parse config file.");
-
     let id = args.value_of("id").unwrap();
     let l = args.value_of("link").unwrap();
     let r = args.value_of("reviewer").unwrap_or("");
     let is_bug = args.is_present("bug");
     let need_copy = args.is_present("copy");
-    let dr = config.default_reviewer;
 
-    let branch_name = comment::branch(id, is_bug);
-    let revs = comment::reviewers(r, dr).expect("Can't create a list of reviewers.");
-    let ls = comment::links(l, config.links);
+    let comment = Comment {
+        id: id.to_string(),
+        links: l.to_string(),
+        reviewers: r.to_string(),
+        config,
+        is_bug,
+    };
 
-    let c = comment::create(Comment {
-        branch_name,
-        links: ls,
-        reviewers: revs,
-    });
+    let output = Comment::new(comment).expect("Could not create comment.");
 
-    println!("{}", c);
+    println!("{}", output);
 
     if need_copy {
         let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
-        ctx.set_contents(c).unwrap();
+        ctx.set_contents(output).unwrap();
     }
 }
