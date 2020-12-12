@@ -5,12 +5,12 @@ mod comment;
 mod config;
 
 use comment::Comment;
+use config::Config;
 
 fn main() {
     let args = cli::args();
 
-    let config_file = config::path(config::FILE);
-    let config = config::parse(config_file).expect("Can't parse config file.");
+    let config = Config::new().expect("Couldn't parse config file.");
 
     let id = args.value_of("id").unwrap();
     let l = args.value_of("link").unwrap();
