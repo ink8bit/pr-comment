@@ -1,6 +1,7 @@
 use serde::Deserialize;
 use std::{collections::HashMap, error::Error, fs};
 
+/// Config file name, format - `JSON`.
 pub const FILE: &str = ".commentrc";
 
 #[derive(Deserialize, Debug)]
@@ -18,6 +19,7 @@ pub struct Config {
 }
 
 impl Config {
+    /// Creates Config struct from config file contents.
     pub fn new() -> Result<Self, Box<dyn Error>> {
         let config_file = Config::path();
         let config = Config::parse(config_file);
@@ -30,6 +32,7 @@ impl Config {
         }
     }
 
+    /// Resolve path to config file `$HOME/.commentrc`.
     fn path() -> String {
         let home_path = dirs::home_dir();
         match home_path {
@@ -42,6 +45,7 @@ impl Config {
         }
     }
 
+    /// Parse config file.
     fn parse(config_file: String) -> Result<Config, Box<dyn Error>> {
         let config_data = fs::read_to_string(config_file)?;
         let config: Config = serde_json::from_str(&config_data)?;
