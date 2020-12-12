@@ -47,7 +47,7 @@ pub fn reviewers(reviewer: &str, default_reviewer: String) -> Result<String, Box
     }
 
     let revs: Vec<&str> = reviewer.split(',').collect();
-    if revs.is_empty() && !revs[0].is_empty() {
+    if !revs.is_empty() && !revs[0].is_empty() {
         for rev in revs {
             rs.push_str(&format!("@{}\n", rev));
         }
