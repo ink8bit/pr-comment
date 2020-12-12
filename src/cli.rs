@@ -2,7 +2,7 @@ use clap::{App, Arg, ArgMatches};
 
 pub fn args() -> ArgMatches {
     App::new("comment")
-        .version("0.0.1")
+        .version("0.0.2")
         .about("comment is a CLI app which creates a formatted comment for your pull requests.")
         .author("ink8bit")
         .arg(
