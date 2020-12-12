@@ -29,7 +29,8 @@ pub fn args() -> ArgMatches {
                 .long("reviewer")
                 .value_name("string")
                 .about("Sets a reviewer or reviewers, use comma for multiple values")
-                .takes_value(true),
+                .takes_value(true)
+                .validator(is_valid_name),
         )
         .arg(
             Arg::new("bug")
@@ -44,4 +45,13 @@ pub fn args() -> ArgMatches {
                 .about("Copies comment to clipboard"),
         )
         .get_matches()
+}
+
+fn is_valid_name(val: &str) -> Result<(), String> {
+    if val.starts_with('@') {
+        return Err(String::from(
+            "Reviewer nickname should be a string without '@' sign.",
+        ));
+    }
+    Ok(())
 }
