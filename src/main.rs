@@ -29,7 +29,7 @@ fn main() {
     let printed = output.print();
     println!("{}", &printed);
 
-    if need_copy {
+    if need_copy && cfg!(target_os = "macos") {
         let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
         ctx.set_contents(printed).unwrap();
     }
