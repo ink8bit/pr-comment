@@ -10,23 +10,31 @@ pub struct Comment {
 }
 
 impl Comment {
-    pub fn new(self) -> Result<Self, String> {
-        let branch_name = Comment::branch_name(&self);
-        let reviewers = Comment::reviewers(&self)?;
-        let links = Comment::links(&self);
+    pub fn new(
+        id: &str,
+        reviewers: &str,
+        links: &str,
+        is_bug: bool,
+        config: Config,
+    ) -> Result<Self, String> {
+        let revs = Comment::check_reviewers(reviewers, &config)?;
 
         let comment = Self {
-            id: branch_name,
-            reviewers,
-            links,
-            config: self.config,
-            is_bug: self.is_bug,
+            id: id.to_string(),
+            reviewers: revs,
+            links: links.to_string(),
+            config,
+            is_bug,
         };
 
         Ok(comment)
     }
 
     pub fn print(self) -> String {
+        let branch = Comment::format_branch_name(&self);
+        let reviewers = Comment::format_reviewers(&self);
+        let links = Comment::format_links(&self);
+
         let comment = format!(
             "
 **PULL REQUEST**
@@ -42,26 +50,29 @@ _TODO:_ what you've changed
 **TESTING**
 _TODO:_ how to test changes you've made
     ",
-            branch = self.id,
-            links = self.links,
-            review = self.reviewers,
+            branch = branch,
+            links = links,
+            review = reviewers,
         );
 
         comment.trim().to_string()
     }
 
-    fn branch_name(&self) -> String {
+    fn format_branch_name(&self) -> String {
         if self.is_bug {
             return format!("bugfix/{}", self.id);
         }
         format!("feature/{}", self.id)
     }
 
-    fn reviewers(&self) -> Result<String, String> {
-        if self.reviewers.is_empty() && self.config.default_reviewer.is_empty() {
+    fn check_reviewers(reviewers: &str, config: &Config) -> Result<String, String> {
+        if reviewers.is_empty() && config.default_reviewer.is_empty() {
             return Err(String::from("You haven't provided any reviewer."));
         }
+        Ok(reviewers.to_string())
+    }
 
+    fn format_reviewers(&self) -> String {
         let mut rs = String::new();
         if self.reviewers.is_empty() {
             rs.push_str(&format!("@{}\n", self.config.default_reviewer));
@@ -74,10 +85,10 @@ _TODO:_ how to test changes you've made
             }
         }
 
-        Ok(rs)
+        rs
     }
 
-    fn links(&self) -> String {
+    fn format_links(&self) -> String {
         let link_list: Vec<&str> = self.links.split(',').collect();
         let mut s = String::new();
 
