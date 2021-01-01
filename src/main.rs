@@ -14,6 +14,8 @@ fn main() {
     let links = args.value_of("link").unwrap();
     let reviewers = args.value_of("reviewer").unwrap_or("");
     let is_bug = args.is_present("bug");
+
+    #[cfg(target_os = "macos")]
     let need_copy = args.is_present("copy");
 
     let config = Config::new().expect("Couldn't parse config file.");
