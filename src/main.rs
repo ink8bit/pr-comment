@@ -1,3 +1,4 @@
+#[cfg(target_os = "macos")]
 use clipboard::{ClipboardContext, ClipboardProvider};
 
 mod cli;
