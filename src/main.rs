@@ -30,5 +30,6 @@ fn main() {
     if need_copy {
         let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
         ctx.set_contents(printed).unwrap();
+        println!("\nYour comment was successfully copied to your clipboard.")
     }
 }
