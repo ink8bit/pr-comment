@@ -76,6 +76,7 @@ _TODO:_ how to test changes you've made
         let mut rs = String::new();
         if self.reviewers.is_empty() {
             rs.push_str(&format!("@{}\n", self.config.default_reviewer));
+            return rs;
         }
 
         let revs: Vec<&str> = self.reviewers.split(',').collect();
@@ -113,23 +114,20 @@ mod tests {
     use super::{Comment, Config};
 
     #[test]
-    fn should_create_comment() {
+    fn should_create_comment_with_proper_field_values() {
         let links = HashMap::new();
         let config = Config {
             default_reviewer: "".to_string(),
             links,
         };
-        let c = Comment {
-            id: "123".to_string(),
-            links: "b/1".to_string(),
-            reviewers: "example_reviewer".to_string(),
-            is_bug: false,
-            config,
-        };
-        let c = Comment::new(c).unwrap();
-        assert_eq!(c.id, "feature/123");
-        assert_eq!(c.links, "".to_string());
-        assert_eq!(c.reviewers.trim(), "@example_reviewer");
+        let c = Comment::new("123", "example_reviewer", "b/1", false, config).unwrap();
+        let branch_name = Comment::format_branch_name(&c);
+        let reviewers = Comment::format_reviewers(&c);
+        let links = Comment::format_links(&c);
+
+        assert_eq!(branch_name, "feature/123");
+        assert_eq!(links, "".to_string());
+        assert_eq!(reviewers.trim(), "@example_reviewer");
     }
 
     #[test]
@@ -139,15 +137,10 @@ mod tests {
             default_reviewer: "default_reviewer".to_string(),
             links,
         };
-        let c = Comment {
-            id: "123".to_string(),
-            links: "b/1".to_string(),
-            reviewers: "".to_string(),
-            is_bug: true,
-            config,
-        };
-        let c = Comment::new(c).unwrap();
-        assert_eq!(c.id, "bugfix/123");
+        let c = Comment::new("123", "", "b/1", true, config).unwrap();
+        let name = Comment::format_branch_name(&c);
+
+        assert_eq!(name, "bugfix/123");
     }
 
     #[test]
@@ -157,15 +150,10 @@ mod tests {
             default_reviewer: "default_reviewer".to_string(),
             links,
         };
-        let c = Comment {
-            id: "123".to_string(),
-            links: "b/1".to_string(),
-            reviewers: "".to_string(),
-            is_bug: false,
-            config,
-        };
-        let c = Comment::new(c).unwrap();
-        assert_eq!(c.reviewers.trim(), "@default_reviewer");
+        let c = Comment::new("123", "", "b/1", false, config).unwrap();
+        let reviewer = Comment::format_reviewers(&c);
+
+        assert_eq!(reviewer.trim(), "@default_reviewer");
     }
 
     #[test]
@@ -175,18 +163,18 @@ mod tests {
             default_reviewer: "default_reviewer".to_string(),
             links,
         };
-        let c = Comment {
-            id: "123".to_string(),
-            links: "b/1".to_string(),
-            reviewers: "example_reviewer_one,example_reviewer_two".to_string(),
-            is_bug: false,
+        let c = Comment::new(
+            "123",
+            "example_reviewer_one,example_reviewer_two",
+            "b/1",
+            false,
             config,
-        };
-        let c = Comment::new(c).unwrap();
-        assert_eq!(
-            c.reviewers,
-            "@example_reviewer_one\n@example_reviewer_two\n"
-        );
+        )
+        .unwrap();
+
+        let reviewers = Comment::format_reviewers(&c);
+
+        assert_eq!(reviewers, "@example_reviewer_one\n@example_reviewer_two\n");
     }
 
     #[test]
@@ -197,15 +185,9 @@ mod tests {
             default_reviewer: "".to_string(),
             links,
         };
-        let c = Comment {
-            id: "123".to_string(),
-            links: "b/1".to_string(),
-            reviewers: "".to_string(),
-            is_bug: false,
-            config,
-        };
-        let c = Comment::new(c).unwrap();
-        assert_eq!(c.reviewers, "");
+        let reviewers = Comment::check_reviewers("", &config).unwrap();
+
+        assert_eq!(reviewers, "");
     }
 
     #[test]
@@ -215,14 +197,8 @@ mod tests {
             default_reviewer: "default_reviewer".to_string(),
             links,
         };
-        let c = Comment {
-            id: "123".to_string(),
-            links: "b/1".to_string(),
-            reviewers: "".to_string(),
-            is_bug: false,
-            config,
-        };
-        let c = Comment::new(c).unwrap();
+        let c = Comment::new("123", "", "b/1", false, config).unwrap();
+
         assert_eq!(c.print(), "**PULL REQUEST**\nfeature/123\n\n**LINKS**\n\n**REVIEW**\n@default_reviewer\n\n**CHANGES**\n_TODO:_ what you\'ve changed\n\n**TESTING**\n_TODO:_ how to test changes you\'ve made");
     }
 }
