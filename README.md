@@ -93,6 +93,8 @@ _TODO:_ how to test changes you've made
 
 ## Help message
 
+> Copy to clipboard works on macOS for now
+
 ```
 USAGE:
     comment [FLAGS] [OPTIONS] --id <int> --link <string>
