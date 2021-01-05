@@ -1,3 +1,5 @@
+//! comment is a CLI utility to create a string comment for your pull request and copy it to clipboard.
+
 #[cfg(target_os = "macos")]
 use clipboard::{ClipboardContext, ClipboardProvider};
 
