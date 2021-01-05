@@ -12,6 +12,17 @@ pub struct Comment {
 }
 
 impl Comment {
+    /// Returns a new comment with provided list of reviewers, links and config values.
+    /// Otherwise - an error with some description
+    ///
+    /// # Arguments
+    ///
+    /// * `reviewers` - reviewer or list of reviewers
+    ///
+    /// * `links` - repo links in a short form.
+    /// For example, `b/1`, where `b` is a key from configuration file and `1` is a pull request ID value.
+    ///
+    /// * `config` - configuration settings
     pub fn new(reviewers: &str, links: &str, config: Config) -> Result<Self, String> {
         let revs = Comment::check_reviewers(reviewers, &config)?;
 
@@ -24,9 +35,9 @@ impl Comment {
         Ok(comment)
     }
 
+    /// Prints an output comment to stdout
     pub fn print(self) -> String {
-        let branch =
-            Comment::format_branch_name().unwrap_or_else(|_| String::from("no branch name"));
+        let branch = Comment::branch_name().unwrap_or_else(|_| String::from("no branch name"));
         let reviewers = Comment::format_reviewers(&self);
         let links = Comment::format_links(&self);
 
@@ -53,7 +64,8 @@ _TODO:_ how to test changes you've made
         comment.trim().to_string()
     }
 
-    fn format_branch_name() -> Result<String, Box<dyn Error>> {
+    /// Returns a current git branch name
+    fn branch_name() -> Result<String, Box<dyn Error>> {
         let out = Command::new("git")
             .args(&["branch", "--show-current"])
             .output()?;
@@ -62,6 +74,7 @@ _TODO:_ how to test changes you've made
         Ok(name.to_string())
     }
 
+    /// Returns an error if there are no reviewers provided in config file or using args
     fn check_reviewers<'a>(reviewers: &'a str, config: &Config) -> Result<&'a str, &'a str> {
         if reviewers.is_empty() && config.default_reviewer.is_empty() {
             return Err("You haven't provided any reviewer.");
@@ -69,6 +82,14 @@ _TODO:_ how to test changes you've made
         Ok(reviewers)
     }
 
+    /// Returns a formatted string with a list of reviewers
+    ///
+    /// An output should look like:
+    ///
+    /// @reviewer_1
+    /// @reviewer_2
+    /// ...
+    /// @reviewer_N
     fn format_reviewers(&self) -> String {
         let mut rs = String::new();
         if self.reviewers.is_empty() {
@@ -86,6 +107,11 @@ _TODO:_ how to test changes you've made
         rs
     }
 
+    /// Returns a formatted string of repo links values
+    ///
+    /// An output should look like (GitHub as an example here, you can provide any link via config file):
+    ///
+    /// - <repo_name> https://github.com/<user>/<repo_name>/pull/<pull_request_id>
     fn format_links(&self) -> String {
         let link_list: Vec<&str> = self.links.split(',').collect();
         let mut s = String::new();
