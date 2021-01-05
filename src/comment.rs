@@ -16,8 +16,8 @@ impl Comment {
         let revs = Comment::check_reviewers(reviewers, &config)?;
 
         let comment = Self {
-            reviewers: revs,
-            links: links.to_string(),
+            reviewers: String::from(revs),
+            links: String::from(links),
             config,
         };
 
@@ -62,11 +62,11 @@ _TODO:_ how to test changes you've made
         Ok(name.to_string())
     }
 
-    fn check_reviewers(reviewers: &str, config: &Config) -> Result<String, String> {
+    fn check_reviewers<'a>(reviewers: &'a str, config: &Config) -> Result<&'a str, &'a str> {
         if reviewers.is_empty() && config.default_reviewer.is_empty() {
-            return Err(String::from("You haven't provided any reviewer."));
+            return Err("You haven't provided any reviewer.");
         }
-        Ok(reviewers.to_string())
+        Ok(reviewers)
     }
 
     fn format_reviewers(&self) -> String {
