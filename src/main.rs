@@ -10,18 +10,15 @@ use config::Config;
 
 fn main() {
     let args = cli::args();
-    let id = args.value_of("id").unwrap();
     let links = args.value_of("link").unwrap();
     let reviewers = args.value_of("reviewer").unwrap_or("");
-    let is_bug = args.is_present("bug");
 
     #[cfg(target_os = "macos")]
     let need_copy = args.is_present("copy");
 
     let config = Config::new().expect("Couldn't parse config file.");
 
-    let output =
-        Comment::new(id, reviewers, links, is_bug, config).expect("Could not create comment.");
+    let output = Comment::new(reviewers, links, config).expect("Could not create comment.");
 
     let printed = output.print();
     println!("{}", &printed);

@@ -1,37 +1,32 @@
 use super::config::Config;
 
+use std::error::Error;
+use std::process::Command;
+use std::str;
+
 #[derive(Debug)]
 pub struct Comment {
-    pub id: String,
     pub reviewers: String,
     pub links: String,
-    pub is_bug: bool,
     pub config: Config,
 }
 
 impl Comment {
-    pub fn new(
-        id: &str,
-        reviewers: &str,
-        links: &str,
-        is_bug: bool,
-        config: Config,
-    ) -> Result<Self, String> {
+    pub fn new(reviewers: &str, links: &str, config: Config) -> Result<Self, String> {
         let revs = Comment::check_reviewers(reviewers, &config)?;
 
         let comment = Self {
-            id: id.to_string(),
             reviewers: revs,
             links: links.to_string(),
             config,
-            is_bug,
         };
 
         Ok(comment)
     }
 
     pub fn print(self) -> String {
-        let branch = Comment::format_branch_name(&self);
+        let branch =
+            Comment::format_branch_name().unwrap_or_else(|_| String::from("no branch name"));
         let reviewers = Comment::format_reviewers(&self);
         let links = Comment::format_links(&self);
 
@@ -58,11 +53,13 @@ _TODO:_ how to test changes you've made
         comment.trim().to_string()
     }
 
-    fn format_branch_name(&self) -> String {
-        if self.is_bug {
-            return format!("bugfix/{}", self.id);
-        }
-        format!("feature/{}", self.id)
+    fn format_branch_name() -> Result<String, Box<dyn Error>> {
+        let out = Command::new("git")
+            .args(&["branch", "--show-current"])
+            .output()?;
+        let name = str::from_utf8(&out.stdout)?;
+
+        Ok(name.to_string())
     }
 
     fn check_reviewers(reviewers: &str, config: &Config) -> Result<String, String> {
@@ -120,27 +117,12 @@ mod tests {
             default_reviewer: "".to_string(),
             links,
         };
-        let c = Comment::new("123", "example_reviewer", "b/1", false, config).unwrap();
-        let branch_name = Comment::format_branch_name(&c);
+        let c = Comment::new("example_reviewer", "b/1", config).unwrap();
         let reviewers = Comment::format_reviewers(&c);
         let links = Comment::format_links(&c);
 
-        assert_eq!(branch_name, "feature/123");
         assert_eq!(links, "".to_string());
         assert_eq!(reviewers.trim(), "@example_reviewer");
-    }
-
-    #[test]
-    fn should_create_bugfix() {
-        let links = HashMap::new();
-        let config = Config {
-            default_reviewer: "default_reviewer".to_string(),
-            links,
-        };
-        let c = Comment::new("123", "", "b/1", true, config).unwrap();
-        let name = Comment::format_branch_name(&c);
-
-        assert_eq!(name, "bugfix/123");
     }
 
     #[test]
@@ -150,7 +132,7 @@ mod tests {
             default_reviewer: "default_reviewer".to_string(),
             links,
         };
-        let c = Comment::new("123", "", "b/1", false, config).unwrap();
+        let c = Comment::new("", "b/1", config).unwrap();
         let reviewer = Comment::format_reviewers(&c);
 
         assert_eq!(reviewer.trim(), "@default_reviewer");
@@ -163,14 +145,7 @@ mod tests {
             default_reviewer: "default_reviewer".to_string(),
             links,
         };
-        let c = Comment::new(
-            "123",
-            "example_reviewer_one,example_reviewer_two",
-            "b/1",
-            false,
-            config,
-        )
-        .unwrap();
+        let c = Comment::new("example_reviewer_one,example_reviewer_two", "b/1", config).unwrap();
 
         let reviewers = Comment::format_reviewers(&c);
 
@@ -191,13 +166,14 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn should_print_comment() {
         let links = HashMap::new();
         let config = Config {
             default_reviewer: "default_reviewer".to_string(),
             links,
         };
-        let c = Comment::new("123", "", "b/1", false, config).unwrap();
+        let c = Comment::new("", "b/1", config).unwrap();
 
         assert_eq!(c.print(), "**PULL REQUEST**\nfeature/123\n\n**LINKS**\n\n**REVIEW**\n@default_reviewer\n\n**CHANGES**\n_TODO:_ what you\'ve changed\n\n**TESTING**\n_TODO:_ how to test changes you\'ve made");
     }
