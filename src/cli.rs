@@ -6,15 +6,6 @@ pub fn args() -> ArgMatches {
         .about("comment is a CLI app which creates a formatted comment for your pull requests.")
         .author("ink8bit")
         .arg(
-            Arg::new("id")
-                .short('i')
-                .long("id")
-                .value_name("int")
-                .about("Sets Task ID value")
-                .required(true)
-                .takes_value(true),
-        )
-        .arg(
             Arg::new("link")
                 .short('l')
                 .long("link")
@@ -31,12 +22,6 @@ pub fn args() -> ArgMatches {
                 .about("Sets a reviewer or reviewers, use comma for multiple values")
                 .takes_value(true)
                 .validator(is_valid_name),
-        )
-        .arg(
-            Arg::new("bug")
-                .short('b')
-                .long("bug")
-                .about("Sets a bug value to true"),
         )
         .arg(
             Arg::new("copy")
