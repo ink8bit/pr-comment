@@ -1,7 +1,7 @@
 //! comment is a CLI utility to create a string comment for your pull request and copy it to clipboard.
 
 #[cfg(target_os = "macos")]
-use clipboard::{ClipboardContext, ClipboardProvider};
+mod clipboard;
 
 mod cli;
 mod comment;
@@ -26,9 +26,8 @@ fn main() {
     println!("{}", &printed);
 
     #[cfg(target_os = "macos")]
-    if need_copy {
-        let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
-        ctx.set_contents(printed).unwrap();
-        println!("\nYour comment was successfully copied to your clipboard.")
+    match clipboard::copy(need_copy, printed) {
+        Ok(v) => println!("{}", v),
+        Err(e) => eprintln!("{}", e),
     }
 }
