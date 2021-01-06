@@ -1,6 +1,6 @@
 [package]
 name = "comment"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["ink8bit <ink8bit@users.noreply.github.com>"]
 edition = "2018"
 
@@ -8,7 +8,7 @@ publish = false
 readme = "README.md"
 repository = "https://github.com/ink8bit/pr-comment/"
 license = "MIT"
-description = "CLI utility to create a text comment to your pull request"
+description = "CLI utility to create a text comment for your pull request"
 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
