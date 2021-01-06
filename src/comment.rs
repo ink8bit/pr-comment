@@ -152,8 +152,8 @@ mod tests {
         let reviewers = Comment::format_reviewers(&c);
         let links = Comment::format_links(&c);
 
-        assert_eq!(links, "".to_string());
-        assert_eq!(reviewers.trim(), "@example_reviewer");
+        assert_eq!(links, "**LINKS**\n".to_string());
+        assert_eq!(reviewers.trim(), "**REVIEW**\n@example_reviewer");
     }
 
     #[test]
@@ -166,7 +166,7 @@ mod tests {
         let c = Comment::new("", "b/1", config).unwrap();
         let reviewer = Comment::format_reviewers(&c);
 
-        assert_eq!(reviewer.trim(), "@default_reviewer");
+        assert_eq!(reviewer.trim(), "**REVIEW**\n@default_reviewer");
     }
 
     #[test]
@@ -180,7 +180,10 @@ mod tests {
 
         let reviewers = Comment::format_reviewers(&c);
 
-        assert_eq!(reviewers, "@example_reviewer_one\n@example_reviewer_two\n");
+        assert_eq!(
+            reviewers,
+            "**REVIEW**\n@example_reviewer_one\n@example_reviewer_two\n"
+        );
     }
 
     #[test]
