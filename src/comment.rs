@@ -50,12 +50,8 @@ impl Comment {
 
         let comment = format!(
             "
-**PULL REQUEST**
 {branch}
-
-**LINKS**
 {links}
-**REVIEW**
 {review}
 **CHANGES**
 _TODO:_ what you've changed
@@ -77,8 +73,10 @@ _TODO:_ how to test changes you've made
             .args(&["branch", "--show-current"])
             .output()?;
         let name = str::from_utf8(&out.stdout)?;
+        let mut formatted = String::from("**PULL REQUEST**\n");
+        formatted.push_str(name);
 
-        Ok(name.to_string())
+        Ok(formatted)
     }
 
     /// Returns an error if there are no reviewers provided in config file or using args
@@ -98,7 +96,7 @@ _TODO:_ how to test changes you've made
     /// ...
     /// @reviewer_N
     fn format_reviewers(&self) -> String {
-        let mut rs = String::new();
+        let mut rs = String::from("**REVIEW**\n");
         if self.reviewers.is_empty() {
             rs.push_str(&format!("@{}\n", self.config.default_reviewer));
             return rs;
@@ -121,7 +119,7 @@ _TODO:_ how to test changes you've made
     /// - <repo_name> https://github.com/<user>/<repo_name>/pull/<pull_request_id>
     fn format_links(&self) -> String {
         let link_list: Vec<&str> = self.links.split(',').collect();
-        let mut s = String::new();
+        let mut s = String::from("**LINKS**\n");
 
         for link in link_list {
             let parts: Vec<&str> = link.split('/').collect();
