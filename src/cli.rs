@@ -7,14 +7,14 @@
 //! - app author
 //! - and all available app arguments
 
-use clap::{App, Arg, ArgMatches};
+use clap::{crate_authors, crate_description, crate_version, App, Arg, ArgMatches};
 
 /// Provides app info and available args
 pub fn args() -> ArgMatches {
     App::new("comment")
-        .version("0.0.2")
-        .about("comment is a CLI app which creates a formatted comment for your pull requests.")
-        .author("ink8bit")
+        .version(crate_version!())
+        .about(crate_description!())
+        .author(crate_authors!())
         .arg(
             Arg::new("link")
                 .short('l')
