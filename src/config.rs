@@ -1,3 +1,5 @@
+//! Configuration options
+
 use serde::Deserialize;
 use std::{collections::HashMap, error::Error, fs};
 
