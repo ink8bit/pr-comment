@@ -1,9 +1,16 @@
+//! Comment struct and methods to construct a valid comment
+
 use super::config::Config;
 
 use std::error::Error;
 use std::process::Command;
 use std::str;
 
+/// Comment struct that defines a comment
+///
+/// - `reviewers` - reviewer or list of reviewers
+/// - `links` - repo links
+/// - `config` - configuration options
 #[derive(Debug)]
 pub struct Comment {
     pub reviewers: String,

@@ -1,3 +1,5 @@
+//! Copy comment to system clipboard
+
 use std::error::Error;
 
 use clipboard::{ClipboardContext, ClipboardProvider};
