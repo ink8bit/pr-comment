@@ -1,5 +1,15 @@
+//! Application info and args
+//!
+//! Defines:
+//! - app name
+//! - app version
+//! - app description
+//! - app author
+//! - and all available app arguments
+
 use clap::{App, Arg, ArgMatches};
 
+/// Provides app info and available args
 pub fn args() -> ArgMatches {
     App::new("comment")
         .version("0.0.2")
@@ -32,11 +42,10 @@ pub fn args() -> ArgMatches {
         .get_matches()
 }
 
-fn is_valid_name(val: &str) -> Result<(), String> {
+/// Returns an error if reviewer's nickname contains `@` sign
+fn is_valid_name(val: &str) -> Result<(), &'static str> {
     if val.starts_with('@') {
-        return Err(String::from(
-            "Reviewer nickname should be a string without '@' sign.",
-        ));
+        return Err("Reviewer nickname should be a string without '@' sign.");
     }
     Ok(())
 }
