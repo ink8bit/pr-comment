@@ -54,10 +54,10 @@ impl Comment {
 {links}
 {review}
 **CHANGES**
-_TODO:_ what you've changed
+TODO: what you've changed
 
 **TESTING**
-_TODO:_ how to test changes you've made
+TODO: how to test changes you've made
     ",
             branch = branch,
             links = links,
