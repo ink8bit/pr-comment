@@ -31,7 +31,7 @@ impl Comment {
     ///
     /// * `config` - configuration settings
     pub fn new(reviewers: &str, links: &str, config: Config) -> Result<Self, String> {
-        let revs = Comment::check_reviewers(reviewers, &config)?;
+        let revs = Self::check_reviewers(reviewers, &config)?;
 
         let comment = Self {
             reviewers: String::from(revs),
@@ -44,9 +44,9 @@ impl Comment {
 
     /// Prints an output comment to stdout
     pub fn print(self) -> String {
-        let branch = Comment::branch_name().unwrap_or_else(|_| String::from("no branch name"));
-        let reviewers = Comment::format_reviewers(&self);
-        let links = Comment::format_links(&self);
+        let branch = Self::branch_name().unwrap_or_else(|_| String::from("no branch name"));
+        let reviewers = Self::format_reviewers(&self);
+        let links = Self::format_links(&self);
 
         let comment = format!(
             "
