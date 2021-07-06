@@ -6,7 +6,7 @@
 
 ```md
 **PULL REQUEST**
-<branch_name>
+<current_branch_name>
 
 **LINKS**
 - repo_name_1 pull_request_url_1
@@ -16,10 +16,10 @@
 @reviewer_nickname
 
 **CHANGES**
-_TODO:_ what you've changed
+TODO: what you've changed
 
 **TESTING**
-_TODO:_ how to test changes you've made
+TODO: how to test changes you've made
 ```
 
 ## Usage
@@ -67,9 +67,9 @@ comment -l p/1
 
 3. You should see the following output:
 
-```
+```md
 **PR**
-`feature/5`
+<current_branch_name>
 
 **LINKS**
 - [pr-comment](https://github.com/ink8bit/pr-comment/pull/1)
@@ -78,10 +78,10 @@ comment -l p/1
 @reviewer_nickname_without_at_sign
 
 **CHANGES**
-_TODO:_ what you've changed
+TODO: what you've changed
 
 **TESTING**
-_TODO:_ how to test changes you've made
+TODO: how to test changes you've made
 ```
 
 ## Help message
@@ -127,9 +127,9 @@ comment -l p/35 -r awesome_reviewer
 
 Then you will get in your terminal:
 
-```
+```md
 **PULL REQUEST**
-<branch_name>
+<current_branch_name>
 
 **LINKS**
 - pr-comment https://github.com/ink8bit/pr-comment/pull/35
@@ -138,10 +138,10 @@ Then you will get in your terminal:
 @awesome_reviewer
 
 **CHANGES**
-_TODO:_ what you've changed
+TODO: what you've changed
 
 **TESTING**
-_TODO:_ how to test changes you've made
+TODO: how to test changes you've made
 ```
 
 ## Development

@@ -23,8 +23,8 @@ pub struct Config {
 impl Config {
     /// Creates Config struct from config file contents.
     pub fn new() -> Result<Self, Box<dyn Error>> {
-        let config_file = Config::path();
-        let config = Config::parse(config_file);
+        let config_file = Self::path();
+        let config = Self::parse(config_file);
         match config {
             Ok(v) => Ok(Self {
                 default_reviewer: v.default_reviewer,
@@ -48,9 +48,9 @@ impl Config {
     }
 
     /// Parse config file.
-    fn parse(config_file: String) -> Result<Config, Box<dyn Error>> {
+    fn parse(config_file: String) -> Result<Self, Box<dyn Error>> {
         let config_data = fs::read_to_string(config_file)?;
-        let config: Config = serde_json::from_str(&config_data)?;
+        let config = serde_json::from_str(&config_data)?;
         Ok(config)
     }
 }
